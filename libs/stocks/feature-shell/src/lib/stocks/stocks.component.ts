@@ -14,6 +14,9 @@ export class StocksComponent implements OnInit {
 
   quotes$ = this.priceQuery.priceQueries$;
 
+  //today's date
+  todaydate:Date = new Date();
+
   timePeriods = [
     { viewValue: 'All available data', value: 'max' },
     { viewValue: 'Five years', value: '5y' },
@@ -28,7 +31,9 @@ export class StocksComponent implements OnInit {
   constructor(private fb: FormBuilder, private priceQuery: PriceQueryFacade) {
     this.stockPickerForm = fb.group({
       symbol: [null, Validators.required],
-      period: [null, Validators.required]
+      period: [null],
+      fromDate: [null, Validators.required],
+      toDate: [null, Validators.required]
     });
   }
 
@@ -37,6 +42,7 @@ export class StocksComponent implements OnInit {
   fetchQuote() {
     if (this.stockPickerForm.valid) {
       const { symbol, period } = this.stockPickerForm.value;
+      this.period = this.stockPickerForm.value.fromDate && this.stockPickerForm.value.toDate ? 'max' : this.period ; 
       this.priceQuery.fetchQuote(symbol, period);
     }
   }

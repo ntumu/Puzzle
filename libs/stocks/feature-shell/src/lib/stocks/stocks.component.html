@@ -17,9 +17,9 @@
     </mat-error>
   </mat-form-field>
 
-  <mat-form-field>
+  <mat-form-field >
     <mat-label>Favorite time period</mat-label>
-    <mat-select formControlName="period" (selectionChange)="fetchQuote()">
+    <mat-select formControlName="period" (selectionChange)="periodChange()">
       <mat-option
         *ngFor="let timePeriod of timePeriods"
         [value]="timePeriod.value"
@@ -33,21 +33,21 @@
   <mat-form-field>
     <mat-label>From date</mat-label>
     <input matInput [matDatepicker]="fromDatePicker" formControlName="fromDate" placeholder="From date" 
-    [max]="todaydate">
+    [max]="todaydate"  (dateChange)="onDateChanged($event)">
     <mat-datepicker-toggle  matSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
-    <mat-datepicker #fromDatePicker></mat-datepicker>
+    <mat-datepicker #fromDatePicker ></mat-datepicker>
   </mat-form-field>
 
   <mat-form-field>
     <mat-label>To date</mat-label>
     <input matInput [matDatepicker]="toDatePicker" formControlName="toDate" placeholder="To date"
     [min]="this.stockPickerForm.get('fromDate').value ? this.stockPickerForm.get('fromDate').value: todaydate"
-    [max]="todaydate">
+    [max]="todaydate" (dateChange)="onDateChanged($event)">
     <mat-datepicker-toggle  matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
-    <mat-datepicker #toDatePicker></mat-datepicker>
+    <mat-datepicker #toDatePicker ></mat-datepicker>
   </mat-form-field>
 
-  <button (click)="fetchQuote()" mat-raised-button>Go</button>
+  <button (click)="fetchQuote()" mat-raised-button [disabled]="this.stockPickerForm.get('period').value">Go</button>
 </form>
 
 <coding-challenge-chart [data$]="quotes$"

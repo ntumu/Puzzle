@@ -37,7 +37,12 @@ const postData = (client, key, value) => {
 const init = async () => {
   const server = new Server({
     port: 3333,
-    host: 'localhost'
+    host: 'localhost',
+    "routes": {
+      "cors": {
+        "origin": ["*"]       
+      }
+    }
   });
 
   server.route({

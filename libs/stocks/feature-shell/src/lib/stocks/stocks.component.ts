@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PriceQueryFacade } from '@coding-challenge/stocks/data-access-price-query';
+import { MatDatepickerInputEvent } from '@angular/material';
 
 @Component({
   selector: 'coding-challenge-stocks',
@@ -11,8 +12,12 @@ export class StocksComponent implements OnInit {
   stockPickerForm: FormGroup;
   symbol: string;
   period: string;
-
+  @Output() 
+  dateChange:EventEmitter< MatDatepickerInputEvent< any>>;
   quotes$ = this.priceQuery.priceQueries$;
+
+  //today's date
+  todaydate: Date = new Date();
 
   timePeriods = [
     { viewValue: 'All available data', value: 'max' },
@@ -28,16 +33,28 @@ export class StocksComponent implements OnInit {
   constructor(private fb: FormBuilder, private priceQuery: PriceQueryFacade) {
     this.stockPickerForm = fb.group({
       symbol: [null, Validators.required],
-      period: [null, Validators.required]
+      period: [null],
+      fromDate: [null],
+      toDate: [null]
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   fetchQuote() {
     if (this.stockPickerForm.valid) {
-      const { symbol, period } = this.stockPickerForm.value;
-      this.priceQuery.fetchQuote(symbol, period);
+      this.priceQuery.fetchQuote(this.stockPickerForm.value.symbol, 'max');
     }
+  }
+
+  onDateChanged(event) {
+    this.stockPickerForm.get('period').setValue(null);
+  }
+
+  periodChange() {
+    const { symbol, period } = this.stockPickerForm.value;
+    this.priceQuery.fetchQuote(symbol, period);
+    this.stockPickerForm.get('fromDate').setValue(null);
+    this.stockPickerForm.get('toDate').setValue(null);
   }
 }

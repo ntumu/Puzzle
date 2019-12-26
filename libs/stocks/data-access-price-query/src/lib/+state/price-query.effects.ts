@@ -18,15 +18,36 @@ import { PriceQueryResponse } from './price-query.type';
 
 @Injectable()
 export class PriceQueryEffects {
+  // @Effect() loadPriceQuery$ = this.dataPersistence.fetch(
+  //   PriceQueryActionTypes.FetchPriceQuery,
+  //   {
+  //     run: (action: FetchPriceQuery, state: PriceQueryPartialState) => {
+  //       return this.httpClient
+  //         .get(
+  //           `${this.env.apiURL}/beta/stock/${action.symbol}/chart/${
+  //             action.period
+  //           }?token=${this.env.apiKey}`
+  //         )
+  //         .pipe(
+  //           map(resp => new PriceQueryFetched(resp as PriceQueryResponse[]))
+  //         );
+  //     },
+
+  //     onError: (action: FetchPriceQuery, error) => {
+  //       return new PriceQueryFetchError(error);
+  //     }
+  //   }
+  // );
+
   @Effect() loadPriceQuery$ = this.dataPersistence.fetch(
     PriceQueryActionTypes.FetchPriceQuery,
     {
       run: (action: FetchPriceQuery, state: PriceQueryPartialState) => {
         return this.httpClient
           .get(
-            `${this.env.apiURL}/beta/stock/${action.symbol}/chart/${
+            `${this.env.localURL}?symbol=${action.symbol}&period=${
               action.period
-            }?token=${this.env.apiKey}`
+            }`
           )
           .pipe(
             map(resp => new PriceQueryFetched(resp as PriceQueryResponse[]))

@@ -47,7 +47,7 @@
     <mat-datepicker #toDatePicker ></mat-datepicker>
   </mat-form-field>
 
-  <button (click)="fetchQuote()" mat-raised-button [disabled]="this.stockPickerForm.get('period').value">Go</button>
+  <button (click)="fetchQuote()" mat-raised-button [disabled]="!this.stockPickerForm.get('fromDate').value && !this.stockPickerForm.get('toDate').value">Go</button>
 </form>
 
 <coding-challenge-chart [data$]="quotes$"
